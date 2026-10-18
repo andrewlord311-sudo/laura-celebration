@@ -460,7 +460,7 @@ const clockText = q => { const m = 16 * 60 + q * 15, H = Math.floor(m / 60), M =
 sClock.addEventListener("input", () => { const q = +sClock.value, h = 16 + q / 4; setClock(h);
   const t = clockText(q);
   msg("c-clock", q < 4 ? `${t}? Far too early, the potatoes aren't even peeled 🥔` : q < 12 ? `${t}… getting closer, the oven's warming up` : q === 12 ? "7pm. Doors open, come on in! 🕖"
-    : q <= 14 ? `${t}: fashionably late is perfectly fine ✨` : q < 24 ? `${t}… you'll miss the first glass!` : q < 32 ? `${t}. Clara and Felix are long asleep 😴` : "Midnight! Even the owl is yawning 🦉");
+    : q <= 14 ? `${t}: fashionably late is perfectly fine ✨` : q <= 16 ? `${t}… you might miss the second glass! 🥂` : q < 24 ? `${t}… careful, you might miss the food! 🍲` : q < 32 ? `${t}. Clara and Felix are long asleep 😴` : "Midnight! Even the owl is yawning 🦉");
   credit("clock", near(q, 12, 14, 8)); if (q >= 12 && q <= 14) done("c-clock"); });
 
 // ---- lights: dark → warm → far too bright → disco
