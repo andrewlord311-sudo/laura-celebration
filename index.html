@@ -88,7 +88,8 @@ a{color:var(--rust)}
 .card .tick{position:absolute;right:16px;top:14px;font-size:22px;opacity:0;transform:scale(.4);transition:all .5s cubic-bezier(.3,1.7,.5,1)}
 .card.done .tick{opacity:1;transform:scale(1)}
 .reveal{max-height:0;overflow:hidden;opacity:0;transition:max-height .9s ease,opacity .9s ease,margin .9s ease}
-.card.done .reveal{max-height:260px;opacity:1;margin-top:10px}
+.card.done .reveal{max-height:900px;opacity:1;margin-top:10px}
+.grad{display:block;width:100%;height:auto;aspect-ratio:1;border-radius:18px;margin:4px 0 10px;box-shadow:0 4px 16px rgba(90,50,30,.18)}
 .reveal .box{border-top:1px dashed #e2c2a2;padding-top:10px}
 .lab{font-size:13px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--amber)}
 .big{font-size:22px;font-weight:600;color:var(--ink);line-height:1.2;margin:2px 0}
@@ -263,8 +264,9 @@ const DETAILS = {
   feast:    {ic:"🍲", lab:"The autumn feast", big:"Come hungry!", small:"Rich, warm, slow-cooked dishes, comforting seasonal sides, wine and drinks, and celebratory treats."},
 };
 const detailHTML = d => `<div class="lab">${d.lab}</div><div class="big">${d.big}</div><div class="small">${d.small}</div>`;
-document.querySelectorAll(".reveal").forEach(r => r.innerHTML = `<div class="box">${detailHTML(DETAILS[r.dataset.k])}</div>`);
-document.getElementById("detailRows").innerHTML = Object.values(DETAILS).map(d => `<div class="row"><div class="ic">${d.ic}</div><div>${detailHTML(d)}</div></div>`).join("")
+const GRAD = `<img class="grad" src="laura-graduate.jpg" alt="Laura in a mortarboard in front of the University of Essex" loading="lazy">`;
+document.querySelectorAll(".reveal").forEach(r => r.innerHTML = `<div class="box">${r.dataset.k === "occasion" ? GRAD : ""}${detailHTML(DETAILS[r.dataset.k])}</div>`);
+document.getElementById("detailRows").innerHTML = GRAD + Object.values(DETAILS).map(d => `<div class="row"><div class="ic">${d.ic}</div><div>${detailHTML(d)}</div></div>`).join("")
   + `<div class="row"><div class="ic">📞</div><div><div class="lab">Questions?</div><div class="small">Ask Andrew: <a href="tel:${EVENT.phone.replace(/\s/g, "")}">${EVENT.phone}</a><br><a href="mailto:${EVENT.email}">${EVENT.email}</a></div></div></div>`;
 
 // ======================================================================== helpers
