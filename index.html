@@ -6,7 +6,13 @@
 <title>You're invited: Laura's celebration 🍂</title>
 <meta name="description" content="An autumn evening of celebration. Saturday 5 December, from 7pm.">
 <meta property="og:title" content="You're invited 🍂">
-<meta property="og:description" content="An autumn evening of celebration for Laura.">
+<meta property="og:description" content="An autumn evening of celebration for Laura. Saturday 5 December, from 7pm.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://andrewlord311-sudo.github.io/laura-celebration/">
+<meta property="og:image" content="https://andrewlord311-sudo.github.io/laura-celebration/preview.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="robots" content="noindex,nofollow">
 <meta name="theme-color" content="#f6e2cf">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -215,7 +221,7 @@ input[type=range]::-moz-range-thumb{width:30px;height:30px;border-radius:50%;bor
   <div class="sheet" style="position:relative">
     <button class="close" id="rsvpClose" aria-label="Close">×</button>
     <h3 class="script">Will you come?</h3>
-    <div class="sub">Your reply goes straight to Andrew</div>
+    <div class="sub">Your reply goes by email to Andrew</div>
     <label for="g-name">Your name(s)</label>
     <input type="text" id="g-name" placeholder="e.g. Sarah &amp; Mark" autocomplete="name">
     <label>Can you come?</label>
@@ -227,8 +233,8 @@ input[type=range]::-moz-range-thumb{width:30px;height:30px;border-radius:50%;bor
     <label for="g-msg">A note for Laura (optional)</label>
     <textarea id="g-msg" placeholder="e.g. So proud of you!"></textarea>
     <div class="acts">
-      <a class="btn" id="sendWa" target="_blank" rel="noopener">Send on WhatsApp</a>
-      <a class="btn ghost" id="sendMail">Send by email</a>
+      <a class="btn" id="sendMail">Send my reply by email</a>
+      <button class="btn ghost" id="copyReply">No email app? Copy my reply</button>
     </div>
     <div class="note" id="rsvpNote"></div>
   </div>
@@ -245,7 +251,7 @@ input[type=range]::-moz-range-thumb{width:30px;height:30px;border-radius:50%;bor
 "use strict";
 // ======================================================================== the event (one place for every detail)
 const EVENT = {
-  phone: "07736 595364", phoneIntl: "447736595364", email: "andrewlord311@gmail.com",
+  phone: "07736 595364", email: "andrewlord311@gmail.com",
   address: "28 Tile House Lane, Great Horkesley, Colchester CO6 4EA",
   map: "https://maps.google.com/?q=28+Tile+House+Ln,+Great+Horkesley,+Colchester+CO6+4EA",
   start: "20261205T190000Z", end: "20261205T233000Z",    // December is GMT, so local time = UTC
@@ -535,15 +541,19 @@ function refreshRsvp(){
   const ready = coming && g("g-name").value.trim();
   g("rsvpNote").textContent = ready ? "" : "Add your name and whether you can come.";
   const txt = rsvpText();
-  g("sendWa").href = `https://wa.me/${EVENT.phoneIntl}?text=${encodeURIComponent(txt)}`;
   g("sendMail").href = `mailto:${EVENT.email}?subject=${encodeURIComponent("RSVP: Laura's celebration")}&body=${encodeURIComponent(txt)}`;
-  ["sendWa","sendMail"].forEach(id => { g(id).style.opacity = ready ? 1 : .5; g(id).style.pointerEvents = ready ? "auto" : "none"; });
+  ["sendMail","copyReply"].forEach(id => { g(id).style.opacity = ready ? 1 : .5; g(id).style.pointerEvents = ready ? "auto" : "none"; });
 }
 [...g("g-coming").children].forEach(b => b.onclick = () => { coming = b.dataset.v; refreshRsvp(); });
 g("g-minus").onclick = () => { count = Math.max(1, count - 1); refreshRsvp(); };
 g("g-plus").onclick = () => { count = Math.min(8, count + 1); refreshRsvp(); };
 ["g-name","g-diet","g-msg"].forEach(id => g(id).addEventListener("input", refreshRsvp));
-["sendWa","sendMail"].forEach(id => g(id).addEventListener("click", () => setTimeout(() => { g("rsvpNote").textContent = "Thank you! Just press send in the message that opened."; }, 300)));
+g("sendMail").addEventListener("click", () => setTimeout(() => { g("rsvpNote").textContent = "Thank you! Just press send in the email that opened."; }, 300));
+// for anyone whose phone or laptop has no email app set up: copy the reply, to paste into an email to Andrew
+g("copyReply").onclick = async () => { const txt = rsvpText();
+  try { await navigator.clipboard.writeText(txt); }
+  catch(e){ const ta = document.createElement("textarea"); ta.value = txt; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove(); }
+  g("rsvpNote").innerHTML = `Copied! Paste it into an email to <a href="mailto:${EVENT.email}">${EVENT.email}</a>`; };
 function openRsvp(){ endFinale(); showDetails(false); rsvp.classList.add("on"); refreshRsvp(); }
 document.querySelectorAll("[data-rsvp]").forEach(b => b.onclick = openRsvp);
 g("rsvpClose").onclick = () => rsvp.classList.remove("on");
